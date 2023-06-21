@@ -1,5 +1,11 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
+# No agrega toda la carpeta de mongo que se creo cuando se corrio el archivo docker-compose.yaml
+mongo/
+
+# Archivo que contiene las variables de entorno
+.env
+
 # dependencies
 /node_modules
 /.pnp
