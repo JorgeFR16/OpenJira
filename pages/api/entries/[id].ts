@@ -34,14 +34,12 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<Data>)
 
 const deleteEntry = async(req: NextApiRequest, res: NextApiResponse<Data> ) => {
 
-  console.log('Entre en el api/entries/id/index.ts');
   const { id } = req.query;
 
   await db.connect();
   const entryDBToDelete = await Entry.findByIdAndDelete( id );
   await db.disconnect();
 
-  console.log('Estoy antes del if en api/entries/id/index.ts');
 
   if ( !entryDBToDelete ) {
     return res.status(400).json({ message: 'No hay entrada con ese ID: ' + id });

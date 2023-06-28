@@ -69,7 +69,7 @@ export const EntryPage: FC<Props> = ({ entry }) => {
   return (
 
 
-    <Layout title={ inputValue.substring(0,20)+'...' }>
+    <Layout title={ inputValue.substring(0,8)+'...' }>
       <Grid
         container
         justifyContent='center'

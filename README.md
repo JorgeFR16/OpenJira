@@ -1,4 +1,7 @@
 # Next.js OpenJira App
+
+![Screenshot](./public/OpenJira.png)
+
 Para correr localmente, se necesita la base de datos
 ```
 docker-compose up -d
@@ -27,3 +30,5 @@ Llamar:
 ```
 http://localhost:3000/api/seed
 ```
+
+
