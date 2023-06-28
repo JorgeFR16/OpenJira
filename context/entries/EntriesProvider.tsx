@@ -1,5 +1,7 @@
 import { FC, PropsWithChildren, useEffect, useReducer } from 'react';
 
+import { useSnackbar } from 'notistack';
+
 import { entriesApi } from '@/apis';
 import { Entry } from '@/interfaces';
 import { EntriesContext, entriesReducer } from './';
@@ -19,6 +21,8 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
 
     const [state, dispatch] = useReducer( entriesReducer, Entries_INITIAL_STATE );
 
+    const { enqueueSnackbar } = useSnackbar();
+
     const addNewEntry = async( description: string ) => {
       
       // Esto lo hacia el front end pero nunca debio de hacerlo solo fue para poder ver como es que se tenia que ver
@@ -36,7 +40,7 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
     }
 
 
-    const updateEntry = async( { _id, description, status }: Entry ) => {
+    const updateEntry = async( { _id, description, status }: Entry, showSnackbar = false ) => {
 
       try {
 
@@ -44,6 +48,16 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
 
 
         dispatch({ type: '[Entry] Entry- Updated', payload: data });
+
+        if ( showSnackbar )
+          enqueueSnackbar('Entrada actualizada', {
+            variant: 'success',
+            autoHideDuration: 1500,
+            anchorOrigin: {
+              vertical: 'top',
+              horizontal: 'right'
+            }
+          });
         
       } catch (error) {
         console.log({ error });
@@ -62,6 +76,35 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
     useEffect(() => {
       refreshEntries();
     }, []);
+
+
+
+    const deleteEntry = async ( entry: Entry, showSnackbar = false ) => {
+      try {
+          const { data } = await entriesApi.delete<Entry>(`/entries/${ entry._id }` )
+
+          dispatch({
+              type: '[Entry] Entry-Deleted',
+              payload: data
+          })
+
+          if( showSnackbar ) {
+              enqueueSnackbar('Entrada borrada correctamente',{
+                  variant: 'success',
+                  autoHideDuration: 1500,
+                  anchorOrigin: {
+                      vertical: 'top',
+                      horizontal: 'right',
+                  }
+              })
+          }
+
+          
+
+      } catch (error) {
+          console.log({ error });
+      }
+  }
     
 
 
@@ -73,6 +116,7 @@ export const EntriesProvider:FC<PropsWithChildren> = ({ children }) => {
         // Methods
         addNewEntry,
         updateEntry,
+        deleteEntry,
     }}>
         { children }
     </EntriesContext.Provider>
